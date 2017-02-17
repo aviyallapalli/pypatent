@@ -22,8 +22,7 @@ class MaltParser:
         except Exception:
             print(Exception)
 
-        cmd = "java -Xmx1024m -jar maltparser-1.2.jar -c engmalt.poly-1.7.mco" \
-              " -i in.conll -o out.conll -m parse".split(" ")
+        cmd = "java -Xmx1024m -jar JARFILE -c MODEL -i INFILE -o OUTFILE -m parse".split(" ")
         cmd[3] = self.malt
         cmd[5] = self.model
         cmd[7] = input_file.name
