@@ -27,7 +27,6 @@ def build_graph(tree):
     graph = gv.Digraph()
     for node in tree:
         node_id = node[0]
-        # node_info = "{}\n{} ({})\n{} / {}".format(node[0], node[1], node[2], node[3], node[7])
         node_info = "{}\n{} ({})\n{}".format(node[0], node[1], node[2], node[3])
         graph.node(name=node_id, label=node_info)
 

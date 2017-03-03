@@ -30,6 +30,14 @@ def segment(text):
     text = re.sub("\n, ", "\n", text)
     text = re.sub("\n{2,}", "\n", text)
 
+    # =======================================================
+    text = re.sub("\n\.\n", "\n", text)
+    # text = re.sub("\nclaim [0-9]+\n", "\n", text)
+    text = re.sub("\n[A-Za-z ]+\nclaim [0-9]+\n", "\n", text)
+
+    text = re.sub("\nwherein ", "\n", text)
+    # =======================================================
+
     if text[0] is "\n":
         text = text[1:]
 

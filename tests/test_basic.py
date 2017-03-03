@@ -1,13 +1,13 @@
-from pypatent.parser import extract_tree
-from pypatent.visualize import parse_conll_text, tree_to_png
-from pypatent.parser.sao import convert_conll_tree, extract_sao
+from pypatent.parser import extract_forest
+from pypatent.parser.reduce import reduce_tree
+from pypatent.parser.svo import extract_svo
 
 filepath = "/home/john/Projects/1.xml"
 
-text = extract_tree(filepath)
-tree = parse_conll_text(text)[3]
-tree = convert_conll_tree(tree)
-svo = extract_sao(tree)
-print(svo)
+forest = extract_forest(filepath)
+svo = []
+for tree in forest:
+    tree = reduce_tree(tree)
+    svo += extract_svo(tree)
 
-# tree_to_png(tree, "/home/john/tree.png")
+print(svo)
