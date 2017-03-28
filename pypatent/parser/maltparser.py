@@ -31,7 +31,7 @@ class MaltParser:
         with open(input_file.name, "w") as f:
             f.write(text_conll)
 
-        ret = self._execute(cmd)
+        ret = self.__execute(cmd)
 
         if ret is not 0:
             raise Exception("MaltParser parsing {} failed with exit code {}".format(" ".join(cmd), ret))
@@ -45,6 +45,6 @@ class MaltParser:
 
         return result
 
-    def _execute(self, cmd):
+    def __execute(self, cmd):
         p = Popen(cmd, shell=False, stdin=PIPE, stdout=PIPE, stderr=PIPE)
         return p.wait()
