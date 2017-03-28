@@ -20,7 +20,6 @@ class TreeTagger:
 
         text = tokenize(input_string)
         text = '\n'.join(x for x in text)
-        # text = '\n'.join((x for x in input_string.split()))
 
         (stdout, stderr) = p.communicate(bytes(text, 'UTF-8'))
 

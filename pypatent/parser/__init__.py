@@ -2,17 +2,16 @@ def extract_forest(text):
     from docs.conf import Config
     from .segment import segment
     from .treetagger import TreeTagger
-    from .conll import Conll, parse_conll_text, conll_eng
+    from .conll import Conll, text_to_conll, tt_list_to_conll
     from .maltparser import MaltParser
 
     tt = TreeTagger(Config.tt_dir + Config.tt_bin, Config.tt_dir + Config.tt_model)
     mp = MaltParser(Config.mp_dir, Config.mp_jar, Config.mp_model)
 
-    text = segment(text)
     text = tt.tag(text)
-    text = conll_eng(text)
+    text = tt_list_to_conll(text)
     text = mp.parse(text)
-    forest = parse_conll_text(text)
+    forest = text_to_conll(text)
 
     return forest
 

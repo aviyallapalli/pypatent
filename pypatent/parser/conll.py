@@ -46,7 +46,7 @@ class Conll:
                      self.feats, self.head, self.deprel, self.deps, self.misc])
 
 
-def conll_eng(tagged_text_list):
+def tt_list_to_conll(tagged_text_list):
     conll_text = ""
     for word in tagged_text_list:
 
@@ -60,7 +60,7 @@ def conll_eng(tagged_text_list):
     return conll_text
 
 
-def parse_conll_text(text):
+def text_to_conll(text):
     text = text.split("\n")
     tree = []
     forest = []
