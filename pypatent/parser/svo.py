@@ -18,7 +18,7 @@ def extract_svo(tree):
 
     svo_list = []
     for verb in action_nodes:
-        children = [n for n in tree if n.head == verb.head]
+        children = [n for n in tree if n.head == verb.id]
         i_children = [n for n in children if n.deprel == "I"]
         ii_children = [n for n in children if n.deprel == "II"]
 

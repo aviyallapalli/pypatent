@@ -1,13 +1,8 @@
-from pypatent.parser import extract_forest
-from pypatent.parser.reduce import reduce_tree
-from pypatent.parser.svo import extract_svo
+from pypatent.format.uspto import get_claims_from_xml, segment, find_sentences_in_text
 
-filepath = "/home/john/Projects/1.xml"
+infile = "/home/john/sandbox/28837.xml"
+text = get_claims_from_xml(infile)
+segmented_text = segment(text)
 
-forest = extract_forest(filepath)
-svo = []
-for tree in forest:
-    tree = reduce_tree(tree)
-    svo += extract_svo(tree)
-
-print(svo)
+sentences = segmented_text.split("\n")
+coords = find_sentences_in_text(text, sentences)
