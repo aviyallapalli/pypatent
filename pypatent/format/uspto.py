@@ -51,7 +51,7 @@ def segment(text):
 
         x.append(sub_sent)
 
-    x = "\n".join([j for i in x for j in i])
+    x = ". ".join([j for i in x for j in i])
     return x
 
 
@@ -61,11 +61,11 @@ def find_sentences_in_text(text, sentences):
     coords = []
     for s in sentences:
         pattern = ".*?".join([t.replace(".", "") for t in tokenize(s)])
-        result = [[m.start(), m.end()] for m in re.finditer(pattern, text[shift:])]
+        result = re.search(pattern, text[shift:])
 
         new_coord = []
         if result:
-            start, end = result[0]
+            start, end = result.span()
             new_coord = [start + shift, end + shift]
             shift += end
         coords.append(new_coord)
