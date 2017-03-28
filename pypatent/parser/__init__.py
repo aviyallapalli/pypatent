@@ -1,5 +1,5 @@
 def extract_forest(text):
-    from docs.conf import Config
+    from pypatent.parser.conf import Config
     from .segment import segment
     from .treetagger import TreeTagger
     from .conll import Conll, text_to_conll, tt_list_to_conll

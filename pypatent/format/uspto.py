@@ -5,7 +5,7 @@ from pypatent.parser.tokenize import simple_word_tokenize as tokenize
 __sep_phrase = [", wherein", ", said", ", and", "; and"] + ["if", "else", "thereby", "such that", "so that", "where",
                                                             "whereby",
                                                             "wherein", "when", "while", "but"]
-
+# wtf
 
 def get_claims_from_xml(filepath):
     """

@@ -1,4 +1,4 @@
-import configparser
+import configparser, os
 
 
 class Config:
@@ -6,7 +6,8 @@ class Config:
     Config-file reader
     """
     _cfg = configparser.ConfigParser()
-    _cfg.read(__file__[:-7] + "main.cfg")
+    # TODO: add custom exception
+    _cfg.read(os.getenv("PYPATENT_CFG"))
 
     tt_dir = _cfg.get("TreeTagger", "directory")
     tt_bin = _cfg.get("TreeTagger", "bin")
