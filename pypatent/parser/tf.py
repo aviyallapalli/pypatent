@@ -6,6 +6,7 @@ verb_attr = ["cop", "neg"] + ["prep"]
 def techfeatures_from_tree(tree):
     verbs = [n for n in tree if n.upostag[0] == "V"]
 
+    totalsvo=[]
     # only for verb with parent=0
     for v in verbs:
         children = get_children(tree, v)
@@ -38,8 +39,9 @@ def techfeatures_from_tree(tree):
             svo += [n for n in get_children(tree, i) if n.deprel == "ATTR"]
 
         svo.sort(key=lambda x: int(x.id))
+        totalsvo.append(svo)
 
-    return svo
+    return totalsvo
 
 
 def get_children(tree, node):

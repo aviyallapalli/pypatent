@@ -59,7 +59,6 @@ def segment(text):
 
 
 def find_sentences_in_text(text, sentences):
-    # TODO: tmp
     shift = 0
     coords = []
     for s in sentences:
@@ -69,6 +68,11 @@ def find_sentences_in_text(text, sentences):
         new_coord = []
         if result:
             start, end = result.span()
+            result = re.search(pattern, text[start + shift + 1: end + shift])
+            while result:
+                start += result.span()[0] + 1
+                result = re.search(pattern, text[start + shift + 1: end + shift])
+
             new_coord = [start + shift, end + shift]
             shift += end
         coords.append(new_coord)
