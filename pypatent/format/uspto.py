@@ -2,9 +2,12 @@ import re
 import xml.etree.ElementTree as etree
 from pypatent.parser.tokenize import simple_word_tokenize as tokenize
 
-__sep_phrase = [", wherein", ", said", ", and", "; and"] + ["if", "else", "thereby", "such that", "so that", "where",
-                                                            "whereby",
-                                                            "wherein", "when", "while", "but"]
+__sep_phrase = [", wherein", ", said", ", and", "; and", ", thereby"] + ["if", "else", "thereby", "such that",
+                                                                         "so that", "wherein",
+                                                                         "whereby",
+                                                                         "where", "when", "while", "but"]
+
+
 # wtf
 
 def get_claims_from_xml(filepath):

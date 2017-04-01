@@ -1,8 +1,7 @@
 def extract_forest(text):
-    from pypatent.parser.conf import Config
-    from .segment import segment
+    from .conf import Config
     from .treetagger import TreeTagger
-    from .conll import Conll, text_to_conll, tt_list_to_conll
+    from .conll import text_to_conll, tt_list_to_conll
     from .maltparser import MaltParser
 
     tt = TreeTagger(Config.tt_dir + Config.tt_bin, Config.tt_dir + Config.tt_model)

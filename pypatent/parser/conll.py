@@ -76,3 +76,7 @@ def text_to_conll(text):
         forest.append(tree)
 
     return forest
+
+
+def conll_to_text(forest):
+    return "\n\n".join("\n".join(str(n) for n in t) for t in forest)
