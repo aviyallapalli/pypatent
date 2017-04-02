@@ -58,7 +58,44 @@ def segment(text):
     return x
 
 
-def find_sentences_in_text(text, sentences):
+def mark_up_text(text, subsents, svo):
+    coords = __find_sentences_coordinates(text, subsents)
+
+    total_shift = 0
+    tf_index = 1
+    for coord, tfs in zip(coords, svo):
+        if not tfs:
+            continue
+
+        sentence_start_index, sentence_end_index = coord
+        sent = text[sentence_start_index + total_shift:sentence_end_index + total_shift]
+
+        # TODO: temporary there is only 1 svo per subsent
+        words_coords = __find_words_coordinates(sent, tfs)[0]
+
+        if len(tfs[0]) != len(words_coords):
+            # TODO: raise Exception
+            print("ahtung")
+
+        shift = 0
+        sent_sub = sent
+        for i in words_coords:
+            start_index, end_index = i[0], i[1]
+            word = sent[start_index: end_index]
+            word_sub = "<div>{}</div>".format(word)
+            sent_sub = sent_sub[:start_index + shift] + word_sub + sent_sub[end_index + shift:]
+            shift += len(word_sub) - len(word)
+
+        sent_sub = "<div class=\"tf{}\">{}</div>".format(tf_index, sent_sub)
+        text = text[:sentence_start_index + total_shift] + sent_sub + text[sentence_end_index + total_shift:]
+        tf_index += 1
+        total_shift += len(sent_sub) - len(sent)
+
+    text = text.replace("\n", "<br>")
+    return text
+
+
+def __find_sentences_coordinates(text, sentences):
     shift = 0
     coords = []
     for s in sentences:
@@ -78,3 +115,22 @@ def find_sentences_in_text(text, sentences):
         coords.append(new_coord)
 
     return coords
+
+
+def __find_words_coordinates(text, svo):
+    shift = 0
+    total_coords = []
+    for tf in svo:
+        coords = []
+        for word in [n.form for n in tf]:
+            result = re.search(word, text[shift:])
+
+            if result:
+                start, end = result.span()
+                coords.append([start + shift, end + shift])
+                shift += end
+            else:
+                # TODO: raise exception
+                pass
+        total_coords.append(coords)
+    return total_coords
