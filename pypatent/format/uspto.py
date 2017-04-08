@@ -82,6 +82,7 @@ def mark_up_text(text, subsents, svo):
         for i in words_coords:
             start_index, end_index = i[0], i[1]
             word = sent[start_index: end_index]
+            # TODO: add type of word (attr, i, ii, action...)
             word_sub = "<div>{}</div>".format(word)
             sent_sub = sent_sub[:start_index + shift] + word_sub + sent_sub[end_index + shift:]
             shift += len(word_sub) - len(word)
@@ -132,5 +133,17 @@ def __find_words_coordinates(text, svo):
             else:
                 # TODO: raise exception
                 pass
+
+        # fix first word coordinates (..forming a chamber(-), the chamber(+) having..)
+        if len(coords) > 2:
+            first_word_start, first_word_end = coords[0]
+            second_word_start, _ = coords[1]
+
+            result = re.finditer(text[first_word_start:first_word_end], text[first_word_end + 1:])
+            for match in result:
+                new_start, new_end = match.span()
+                if new_end + first_word_end + 1 < second_word_start:
+                    coords[0] = [new_start + first_word_end + 1, new_end + first_word_end + 1]
+
         total_coords.append(coords)
     return total_coords

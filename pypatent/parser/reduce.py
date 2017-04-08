@@ -1,5 +1,5 @@
-del_roles = ["aux", "auxpass", "cop", "punct", "det", "predet", "cc", "quantmod", "tmod", "prep", "prt"]
-attr_roles = ["arg", "acop", "mod", "amod", "nn", "neg", "expl", "poss", "possessive", "attr"]
+del_roles = ["aux", "auxpass", "punct", "det", "predet", "cc", "quantmod", "tmod", "prep", "prt"]
+attr_roles = ["arg", "acop", "mod", "amod", "nn", "neg", "expl", "poss", "possessive", "attr", "cop"]
 append_roles = ["appos", "num", "number", "ref", "sdep"]
 coord_roles = ["advcl", "comp", "acomp", "ccomp", "xcomp", "pcomp", "partmod", "advmod", "infmod", "mwe", "11mark",
                "rcmod", "npadvmod", "parataxis"]
@@ -27,8 +27,8 @@ def reduce_tree(tree):
             node.deprel = "II"
         elif node.deprel in conj_roles:
             node.deprel = "CONJ"
-        # else:
-        #     print("unknown role {}".format(node.deprel))
+            # else:
+            #     print("unknown role {}".format(node.deprel))
     return tree
 
 
