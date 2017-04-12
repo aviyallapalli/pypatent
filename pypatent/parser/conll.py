@@ -90,6 +90,26 @@ class ConllTree:
             # current_child.__parse_children(data)
             self.add_child(child).__parse_children(data)
 
+    def visualize(self, extension="png"):
+        import graphviz as gv
+        """
+        Creating an image from conll-format tree.
+        :param tree: conll-format tree
+        :param extension: image file extension
+        :return: binary data string
+        """
+        graph = gv.Digraph()
+        for x in self:
+            node_info = "{}\n{} ({})\n{}".format(*x.value)
+            graph.node(name=str(x.value.id), label=node_info)
+
+        for x in self:
+            if x.parent:
+                graph.edge(head_name=str(x.value.id),
+                           tail_name=str(x.parent.value.id),
+                           label=x.value.deprel)
+        return graph.pipe(extension)
+
     def __iter__(self):
         from itertools import chain
         sequence = list(chain((self,), *map(iter, self.children)))
