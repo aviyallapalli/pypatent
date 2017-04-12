@@ -66,6 +66,7 @@ class ConllTree:
         self.parent.children.remove(self)
         for child in self.children:
             child.value.head = self.parent.value.id
+            child.parent = self.parent
             self.parent.children.append(child)
 
     def children_by_role(self, role):
