@@ -1,4 +1,4 @@
-from .tree import ConllTree
+from .conll import ConllTree
 
 del_roles = ["aux", "auxpass", "punct", "det", "predet", "cc", "quantmod", "tmod", "prep", "prt"]
 attr_roles = ["arg", "acop", "mod", "amod", "nn", "neg", "expl", "poss", "possessive", "attr", "cop"]

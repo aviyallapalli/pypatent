@@ -74,7 +74,7 @@ def mark_up_text(text, subsents, svo):
         # TODO: temporary there is only 1 svo per subsent
         words_coords = __find_words_coordinates(sent, tfs)[0]
 
-        if len(tfs[0]) != len(words_coords):
+        if len(list(tfs[0])) != len(words_coords):
             # TODO: raise Exception
             print("ahtung")
 
@@ -119,12 +119,12 @@ def __find_sentences_coordinates(text, sentences):
     return coords
 
 
-def __find_words_coordinates(text, svo):
-    shift = 0
+def __find_words_coordinates(text, features):
     total_coords = []
-    for tf in svo:
+    for feature in features:
+        shift = 0
         coords = []
-        for word in [n.form for n in tf]:
+        for word in [x.value.form for x in feature]:
             result = re.search(word, text[shift:])
 
             if result:
@@ -137,10 +137,11 @@ def __find_words_coordinates(text, svo):
 
         # fix first word coordinates (..forming a chamber(-), the chamber(+) having..)
         if len(coords) > 2:
-            first_word_start, first_word_end = coords[0]
+            _, first_word_end = coords[0]
             second_word_start, _ = coords[1]
 
-            result = re.finditer(text[first_word_start:first_word_end], text[first_word_end + 1:])
+            # result = re.finditer(text[first_word_start:first_word_end], text[first_word_end + 1:])
+            result = re.finditer(word, text[first_word_end + 1:])
             for match in result:
                 new_start, new_end = match.span()
                 if new_end + first_word_end + 1 < second_word_start:
