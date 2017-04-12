@@ -3,41 +3,42 @@ required_verbs = ["VVN"]
 verb_attr = ["cop", "neg"] + ["prep"]
 
 
-def techfeatures_from_tree(tree):
-    verbs = [n for n in tree if n.upostag[0] == "V"]
+def tf_from_tree(tree):
+    from .conll import ConllTree
+    from copy import copy
 
-    totalsvo=[]
-    # only for verb with parent=0
-    for v in verbs:
-        children = get_children(tree, v)
-        i_children = [n for n in children if n.deprel == "I"]
-        ii_children = [n for n in children if n.deprel == "II"]
+    features = []
+
+    verbs = [x for x in tree if x.value.upostag[0] == "V"]
+
+    for verb in verbs:
+        i_children = verb.children_by_role("I")
+        ii_children = verb.children_by_role("II")
 
         if not len(i_children) or not len(ii_children):
             continue
 
-        svo = []
-        svo.append(v)
-        svo.extend(i_children)
-        svo.extend(ii_children)
+        feature = []
+        feature.append(verb)
+        feature.extend(i_children)
+        feature.extend(ii_children)
 
-        for i in i_children + ii_children + [v]:
-            svo += [n for n in get_children(tree, i) if n.deprel == "ATTR"]
+        for i in i_children + ii_children + [tree]:
+            feature += i.children_by_role("ATTR")
 
         conj = []
         for i in ii_children:
-            conj += [n for n in get_children(tree, i) if n.deprel == "CONJ"]
+            conj += i.children_by_role("CONJ")
 
-        svo += conj
+        feature += conj
 
         for i in conj:
-            svo += [n for n in get_children(tree, i) if n.deprel == "ATTR"]
+            feature += i.children_by_role("ATTR")
 
-        svo.sort(key=lambda x: int(x.id))
-        totalsvo.append(svo)
+        feature = [copy(x.value) for x in feature]
+        feature[0].head = 0  # verb now is root
+        feature.sort(key=lambda x: int(x.id))
+        feature = ConllTree.from_list(feature)
+        features.append(feature)
 
-    return totalsvo
-
-
-def get_children(tree, node):
-    return [n for n in tree if n.head == node.id]
+    return features
