@@ -9,7 +9,8 @@ class MaltParser:
         self.malt = malt_name
         self.model = model_name
 
-    def parse(self, text_conll):
+    def parse(self, tt_list):
+        text_conll = MaltParser.__tt_list_to_conll(tt_list)
 
         with tempfile(prefix="malt_input_", dir=self.path, mode="w", delete=False) as input_file:
             with tempfile(prefix="malt_output_", dir=self.path, mode="w", delete=False) as output_file:
@@ -45,6 +46,11 @@ class MaltParser:
 
         return result
 
-    def __execute(self, cmd):
+    @staticmethod
+    def __execute(cmd):
         p = Popen(cmd, shell=False, stdin=PIPE, stdout=PIPE, stderr=PIPE)
         return p.wait()
+
+    @staticmethod
+    def __tt_list_to_conll(tt_list):
+        return "\n".join("" if str.lower(x[1]) == "sent" else "1\t{0}\t{2}\t{1}\t{1}\t_".format(*x) for x in tt_list)

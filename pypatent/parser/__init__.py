@@ -1,7 +1,7 @@
 def extract_forest(sents):
     from .conf import Config
     from .treetagger import TreeTagger
-    from .conll import text_to_conll, tt_list_to_conll
+    from .conll import text_to_conll
     from .maltparser import MaltParser
 
     tt = TreeTagger(Config.tt_dir + Config.tt_bin, Config.tt_dir + Config.tt_model)
@@ -9,7 +9,6 @@ def extract_forest(sents):
 
     text = ". ".join(sents)
     text = tt.tag(text)
-    text = tt_list_to_conll(text)
     # TODO: try multiprocessing
     # results = multiprocessing.Pool(number_of_processes).map(func, data)
     # outputs = [result[0] for result in results]
