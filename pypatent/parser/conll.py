@@ -17,13 +17,13 @@ class Conll:
     """
 
     def __init__(self, args):
-        self.id = args[0]
+        self.id = int(args[0])
         self.form = args[1]
         self.lemma = args[2]
         self.upostag = args[3]
         self.xpostag = args[4]
         self.feats = args[5]
-        self.head = args[6]
+        self.head = int(args[6])
         self.deprel = args[7]
         self.deps = args[8]
         self.misc = args[9]
@@ -35,7 +35,7 @@ class Conll:
                  self.upostag + "\t" + \
                  self.xpostag + "\t" + \
                  self.feats + "\t" + \
-                 self.head + "\t" + \
+                 str(self.head) + "\t" + \
                  self.deprel + "\t" + \
                  self.deps + "\t" + \
                  self.misc
@@ -46,37 +46,66 @@ class Conll:
                      self.feats, self.head, self.deprel, self.deps, self.misc])
 
 
-def tt_list_to_conll(tagged_text_list):
-    conll_text = ""
-    for word in tagged_text_list:
+class ConllTree:
+    def __init__(self, value, parent=None):
+        self.value = value
+        self.parent = parent
+        self.children = []
 
-        if str.lower(word[1]) == "sent":
-            conll_text += "\n"
-            continue
+    def add_child(self, value):
+        if not isinstance(value, type(self.value)):
+            raise TypeError
 
-        conll_text += "1" + "\t" + word[0] + "\t" + word[2] + "\t" + word[1] + "\t" + word[1] + "\t" + "_" + "\n"
-        conll_text += "\n" if str.lower(word[1]) == "sent" else ""
+        child = ConllTree(value, self)
+        self.children.append(child)
+        return child
 
-    return conll_text
+    def remove(self):
+        if not self.parent:
+            raise RemoveRootError
+        self.parent.children.remove(self)
+        for child in self.children:
+            child.value.head = self.parent.value.id
+            self.parent.children.append(child)
+
+    def children_by_role(self, role):
+        return [x for x in self.children if x.value.deprel == role]
+
+    @staticmethod
+    def from_list(data):
+        root = next((x for x in data if x.head == 0))
+        tree = ConllTree(root)
+        tree.__parse_children(data)
+        return tree
+
+    @staticmethod
+    def from_str(string):
+        return ConllTree.from_list([Conll(x.split("\t")) for x in string.split("\n") if x])
+
+    def __parse_children(self, data):
+        children = [n for n in data if n.head == self.value.id]
+        for child in children:
+            # current_child = self.add_child(child)
+            # current_child.__parse_children(data)
+            self.add_child(child).__parse_children(data)
+
+    def __iter__(self):
+        from itertools import chain
+        sequence = list(chain((self,), *map(iter, self.children)))
+        sequence.sort(key=lambda x: x.value.id)
+        return iter(sequence)
+
+    def __str__(self):
+        return "\n".join(str(x.value) for x in self.__iter__())
 
 
-def text_to_conll(text):
-    text = text.split("\n")
-    tree = []
-    forest = []
-    for line in text:
-        node = line.split("\t")
-        if len(node) != 1:
-            tree.append(Conll(node))
-        else:
-            if len(tree) != 0:
-                forest.append(tree)
-                tree = []
-    if len(tree) != 0:
-        forest.append(tree)
-
-    return forest
+class RemoveRootError(Exception):
+    pass
 
 
-def conll_to_text(forest):
-    return "\n\n".join("\n".join(str(n) for n in t) for t in forest)
+def text_to_forest(text):
+    return [ConllTree.from_str(x) for x in text.split("\n\n") if x]
+
+
+def forest_to_text(forest):
+    return "\n\n".join("\n".join(str(n.value) for n in t) for t in forest)
