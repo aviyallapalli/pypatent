@@ -54,7 +54,8 @@ def segment(text):
 
         x.append(sub_sent)
 
-    x = ". ".join([j for i in x for j in i])
+    # x = ". ".join([j for i in x for j in i])
+    x = [j for i in x for j in i]
     return x
 
 
