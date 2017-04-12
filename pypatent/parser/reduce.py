@@ -1,3 +1,5 @@
+from .tree import ConllTree
+
 del_roles = ["aux", "auxpass", "punct", "det", "predet", "cc", "quantmod", "tmod", "prep", "prt"]
 attr_roles = ["arg", "acop", "mod", "amod", "nn", "neg", "expl", "poss", "possessive", "attr", "cop"]
 append_roles = ["appos", "num", "number", "ref", "sdep"]
@@ -8,41 +10,22 @@ ii_roles = ["obj", "dobj", "iobj", "pobj"]
 conj_roles = ["conj", "preconj"]
 
 
-def reduce_tree(tree):
-    node = __find_del_node(tree)
-    while node is not None:
-        __remove_del_node(tree, node)
-        node = __find_del_node(tree)
+def reduce_tree(tree: ConllTree):
+    for i in tree:
+        if i.value.deprel in del_roles:
+            i.remove()
 
-    for node in tree:
-        if node.deprel in attr_roles:
-            node.deprel = "ATTR"
-        elif node.deprel in append_roles:
-            node.deprel = "APPEND"
-        elif node.deprel in coord_roles:
-            node.deprel = "COORD"
-        elif node.deprel in i_roles:
-            node.deprel = "I"
-        elif node.deprel in ii_roles:
-            node.deprel = "II"
-        elif node.deprel in conj_roles:
-            node.deprel = "CONJ"
-            # else:
-            #     print("unknown role {}".format(node.deprel))
-    return tree
-
-
-def __find_del_node(tree):
-    for node in tree:
-        if node.deprel in del_roles:
-            return node
-    return None
-
-
-def __remove_del_node(tree, node):
-    id = node.id
-    parent = node.head
-    tree.remove(node)
-    for n in tree:
-        if n.head == id:
-            n.head = parent
+    for i in tree:
+        value = i.value
+        if value.deprel in attr_roles:
+            value.deprel = "ATTR"
+        elif value.deprel in append_roles:
+            value.deprel = "APPEND"
+        elif value.deprel in coord_roles:
+            value.deprel = "COORD"
+        elif value.deprel in i_roles:
+            value.deprel = "I"
+        elif value.deprel in ii_roles:
+            value.deprel = "II"
+        elif value.deprel in conj_roles:
+            value.deprel = "CONJ"
