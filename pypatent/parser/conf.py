@@ -1,18 +1,19 @@
-import configparser, os
+import configparser
 
 
 class Config:
     """
     Config-file reader
     """
-    _cfg = configparser.ConfigParser()
-    # TODO: add custom exception
-    _cfg.read(os.getenv("PYPATENT_CFG"))
+    @staticmethod
+    def read(filepath):
+        cfg = configparser.ConfigParser()
+        cfg.read(filepath)
 
-    tt_dir = _cfg.get("TreeTagger", "directory")
-    tt_bin = _cfg.get("TreeTagger", "bin")
-    tt_model = _cfg.get("TreeTagger", "model")
+        Config.tt_dir = cfg.get("TreeTagger", "directory")
+        Config.tt_bin = cfg.get("TreeTagger", "bin")
+        Config.tt_model = cfg.get("TreeTagger", "model")
 
-    mp_dir = _cfg.get("MaltParser", "directory")
-    mp_jar = _cfg.get("MaltParser", "jar")
-    mp_model = _cfg.get("MaltParser", "model")
+        Config.mp_dir = cfg.get("MaltParser", "directory")
+        Config.mp_jar = cfg.get("MaltParser", "jar")
+        Config.mp_model = cfg.get("MaltParser", "model")
