@@ -1,4 +1,5 @@
 from .conll import ConllTree
+from copy import deepcopy
 
 del_roles = ["aux", "auxpass", "punct", "det", "predet", "cc", "quantmod", "tmod", "prep", "prt"]
 attr_roles = ["arg", "acop", "mod", "amod", "nn", "neg", "expl", "poss", "possessive", "attr", "cop"]
@@ -11,11 +12,13 @@ conj_roles = ["conj", "preconj"]
 
 
 def reduce_tree(tree: ConllTree):
-    for i in tree:
+    tree_copy = deepcopy(tree)
+
+    for i in tree_copy:
         if i.value.deprel in del_roles:
             i.remove()
 
-    for i in tree:
+    for i in tree_copy:
         value = i.value
         if value.deprel in attr_roles:
             value.deprel = "ATTR"
@@ -29,3 +32,5 @@ def reduce_tree(tree: ConllTree):
             value.deprel = "II"
         elif value.deprel in conj_roles:
             value.deprel = "CONJ"
+
+    return tree_copy
