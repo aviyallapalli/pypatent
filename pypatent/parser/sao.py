@@ -1,9 +1,9 @@
-required_verbs = ["VVN"]
+__required_verbs = ["VVN"]
 
-verb_attr = ["cop", "neg"] + ["prep"]
+__verb_attr = ["cop", "neg"] + ["prep"]
 
 
-def tf_from_tree(tree):
+def extract_sao(tree):
     from .conll import ConllTree
     from copy import copy
 

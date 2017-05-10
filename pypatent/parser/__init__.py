@@ -30,9 +30,9 @@ class Parser:
     @staticmethod
     def extract_sao(forest):
         from .reduce import reduce_tree
-        from .tf import tf_from_tree
+        from .sao import extract_sao
 
         reduced_forest = [reduce_tree(t) for t in forest]
-        sao = [tf_from_tree(t) for t in reduced_forest]
+        sao = [extract_sao(t) for t in reduced_forest]
 
         return sao
